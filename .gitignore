@@ -1,0 +1,9 @@
+__pycache__/
+*.pyc
+.DS_Store
+.venv/
+.tools/
+models/
+*.part
+audio.*
+audio-16k.wav

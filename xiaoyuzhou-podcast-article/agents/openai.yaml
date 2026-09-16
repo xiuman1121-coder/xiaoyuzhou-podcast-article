@@ -1,0 +1,4 @@
+interface:
+  display_name: "小宇宙播客阅读版"
+  short_description: "将小宇宙播客整理成中文文章，并基于逐字稿继续问答"
+  default_prompt: "使用 $xiaoyuzhou-podcast-article 将这个小宇宙单集链接整理成可阅读的中文 HTML 文章。"

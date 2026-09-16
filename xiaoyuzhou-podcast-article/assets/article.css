@@ -1,0 +1,50 @@
+:root { color-scheme: light; --paper:#f7f6f2; --ink:#20211f; --muted:#666861; --line:#d9d8d1; --accent:#285448; }
+* { box-sizing: border-box; }
+html { background: var(--paper); }
+body { margin:0; color:var(--ink); background:var(--paper); font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text","PingFang SC","Microsoft YaHei","Noto Sans CJK SC","Noto Sans SC",Arial,sans-serif; font-size:17px; line-height:1.88; letter-spacing:.01em; -webkit-font-smoothing:antialiased; }
+main { width:min(820px,calc(100% - 48px)); margin:0 auto; padding:76px 0 96px; }
+.eyebrow,.chapter-meta { color:var(--accent); font-size:13px; font-weight:700; letter-spacing:.16em; text-transform:uppercase; }
+h1 { margin:20px 0 18px; font-size:clamp(32px,5.4vw,48px); line-height:1.18; letter-spacing:-.035em; }
+.deck { margin:0; color:var(--muted); font-size:16px; line-height:1.65; }
+.deck a { color:var(--accent); font-weight:600; text-decoration-thickness:1px; }
+.masthead { padding-bottom:44px; border-bottom:1px solid var(--line); }
+section { margin-top:56px; }
+h2 { margin:0 0 22px; font-size:24px; line-height:1.35; letter-spacing:-.02em; }
+.lead p { margin:0 0 18px; font-size:17px; line-height:1.88; }
+.takeaways { counter-reset:takeaway; }
+.takeaway { counter-increment:takeaway; position:relative; padding:20px 0 20px 52px; border-top:1px solid var(--line); }
+.takeaway::before { content:counter(takeaway, decimal-leading-zero); position:absolute; left:0; top:23px; color:var(--accent); font-family:ui-monospace,SFMono-Regular,Menlo,monospace; font-size:13px; font-weight:700; letter-spacing:.08em; }
+.takeaway:last-child { border-bottom:1px solid var(--line); }
+.takeaway h3 { margin:0 0 7px; font-size:18px; line-height:1.55; }
+.takeaway p { margin:0; color:#4f514c; font-size:15.5px; line-height:1.8; }
+.takeaway .takeaway-insight { margin-top:9px; color:var(--ink); }
+.chapter { margin-top:72px; }
+.chapter h2 { margin:9px 0 26px; font-size:26px; line-height:1.38; }
+.chapter p,.chapter li { margin:0 0 20px; }
+.chapter ul { padding-left:1.25em; }
+.table-wrap { margin:30px 0 10px; overflow-x:auto; border-top:1px solid var(--line); border-bottom:1px solid var(--line); }
+table { width:100%; border-collapse:collapse; font-size:15px; line-height:1.6; font-variant-numeric:tabular-nums; }
+caption { padding:12px 0; text-align:left; color:var(--muted); font-size:13.5px; }
+th,td { padding:11px 12px; border-bottom:1px solid var(--line); text-align:left; vertical-align:top; }
+th { color:var(--accent); font-size:13px; letter-spacing:.04em; }
+tbody tr:last-child td { border-bottom:0; }
+.table-note { margin:0 0 26px!important; color:var(--muted); font-size:13.5px; line-height:1.7; }
+blockquote { margin:30px 0; padding:2px 0 2px 22px; border-left:3px solid var(--accent); font-size:19px; line-height:1.75; }
+blockquote cite { display:block; margin-top:8px; color:var(--muted); font-size:14px; font-style:normal; }
+figure { margin:38px 0; }
+.figure-gallery { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:22px 18px; margin:38px 0; }
+.figure-gallery figure { margin:0; min-width:0; }
+.figure-gallery figcaption { font-size:12.5px; }
+.figure-link { display:block; cursor:zoom-in; }
+figure img { display:block; width:100%; height:auto; border-radius:2px; }
+figcaption { margin-top:10px; color:var(--muted); font-size:13.5px; line-height:1.65; }
+.viewer-open { overflow:hidden; }
+.image-viewer { position:fixed; inset:0; z-index:1000; display:flex; align-items:center; justify-content:center; padding:42px; background:rgba(20,21,19,.92); cursor:zoom-out; }
+.image-viewer[hidden] { display:none; }
+.image-viewer img { display:block; max-width:94vw; max-height:90vh; width:auto; height:auto; object-fit:contain; cursor:zoom-out; }
+.image-viewer-close { position:fixed; top:16px; right:20px; width:42px; height:42px; padding:0; border:1px solid rgba(255,255,255,.5); border-radius:50%; color:#fff; background:rgba(0,0,0,.28); font:300 30px/38px Arial,sans-serif; cursor:pointer; }
+.image-viewer-close:focus-visible { outline:2px solid #fff; outline-offset:3px; }
+.source-note { margin-top:72px; padding-top:24px; border-top:1px solid var(--line); color:var(--muted); font-size:13.5px; line-height:1.7; }
+a { color:var(--accent); text-underline-offset:3px; }
+@media (max-width:640px) { body{font-size:16px;line-height:1.84} main{width:min(100% - 32px,820px);padding:48px 0 72px} .masthead{padding-bottom:34px} section{margin-top:44px} h2{font-size:22px}.lead p{font-size:16px}.chapter{margin-top:56px}.chapter h2{font-size:23px}.takeaway{padding-left:42px}.takeaway h3{font-size:17px}.takeaway p{font-size:15px} blockquote{font-size:17px;padding-left:17px}.figure-gallery{grid-template-columns:1fr}.image-viewer{padding:24px}.image-viewer-close{top:10px;right:10px} }
+@media print { body{background:#fff} main{width:100%;max-width:760px;padding:20px 0} a{color:inherit} }
