@@ -117,7 +117,6 @@ def main():
     parser.add_argument("url")
     parser.add_argument("--output-root", type=Path, default=Path.home() / "Desktop" / "xiaoyuzhou-podcast-article")
     parser.add_argument("--html-file", type=Path, help="Use a saved page instead of the network")
-    parser.add_argument("--download-audio", action="store_true")
     args = parser.parse_args()
 
     parsed = urllib.parse.urlparse(args.url)
@@ -170,16 +169,6 @@ def main():
     captions = caption_segments(episode.get("transcript"))
     if captions:
         (work / "captions.json").write_text(json.dumps({"source": "xiaoyuzhou_page", "segments": captions}, ensure_ascii=False, indent=2), encoding="utf-8")
-
-    if args.download_audio:
-        audio_url = (episode.get("enclosure") or {}).get("url") or (((episode.get("media") or {}).get("source") or {}).get("url"))
-        if not audio_url:
-            raise RuntimeError("单集数据中没有公开音频地址")
-        suffix = Path(urllib.parse.urlparse(audio_url).path).suffix.lower() or ".audio"
-        audio_path = work / f"audio{suffix}"
-        download(audio_url, audio_path)
-        episode_record["temporary_audio"] = str(audio_path)
-        (work / "episode.json").write_text(json.dumps(episode_record, ensure_ascii=False, indent=2), encoding="utf-8")
 
     print(episode_dir)
 

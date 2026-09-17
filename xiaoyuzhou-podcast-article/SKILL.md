@@ -2,7 +2,7 @@
 name: xiaoyuzhou-podcast-article
 description: 将小宇宙单集链接整理为忠实、完整且适合阅读的中文 HTML 文章，并基于已保存的逐字稿回答后续问题。用户要求把 xiaoyuzhoufm.com/episode 链接转成文章，或继续询问该节目中的概念、观点、数据和依据时使用；不用于其他播客平台或普通网页摘要。
 metadata:
-  version: "1.0.0"
+  version: "2.0.0"
 ---
 
 # 小宇宙播客阅读版
@@ -22,13 +22,13 @@ metadata:
 
 ## 工作流程
 
-1. 运行 `scripts/fetch_episode.py`，提取原始标题、节目资料、Show Notes、音频地址和全部图片，并下载临时音频。
+1. 运行 `scripts/fetch_episode.py`，提取原始标题、节目资料、Show Notes、公开音频 CDN 地址和全部图片；不要下载原始音频。
 2. 优先检查页面中是否有可用字幕。字幕必须有连续时间戳并覆盖主体内容；否则运行 `scripts/transcribe.py`。
-3. 默认使用本地 `faster-whisper` 的 `small` 模型；设备资源不足或 `small` 无法运行时改用 `base`。只支持这两个模型，不使用 MLX。无需 API Key。
-4. 运行 `scripts/validate_transcript.py`。先人工核对标题、人物、术语、数字、时间覆盖和明显错听，再进入写作。
-5. 阅读 [内容整理规则](references/editorial-rules.md)，逐段制作 `article.json`、`source-map.json` 与图片取舍记录。输入输出格式见 [数据格式](references/formats.md)。
-6. 运行 `scripts/render_article.py` 生成固定样式的 `index.html`，再运行 `scripts/audit_package.py` 做交付检查。
-7. 检查通过后运行 `scripts/cleanup_audio.py` 删除临时音频。若最终停止重试，也删除临时音频。
+3. 无可用字幕时，只使用阿里云百炼华北 2（北京）的 `paraformer-v2`，把小宇宙 CDN URL 直接交给异步录音文件识别 API。用户必须配置自己的 `DASHSCOPE_API_KEY`，并先在百炼控制台为该模型开启“免费额度用完即停”。不提供本地语音模型、OSS 或其他转录 fallback。
+4. 默认只允许免费额度调用。收到 `AllocationQuota.FreeTierOnly`、欠费或余额不足错误时立即停止，不重试、不自动转入付费。只有用户在看到本期预计费用后明确同意付费，并自行充值、关闭“免费额度用完即停”时，才可对该次运行传入 `--allow-paid`。
+5. 运行 `scripts/validate_transcript.py`。先人工核对标题、人物、术语、数字、时间覆盖和明显错听，再进入写作。
+6. 阅读 [内容整理规则](references/editorial-rules.md)，逐段制作 `article.json`、`source-map.json` 与图片取舍记录。输入输出格式见 [数据格式](references/formats.md)。
+7. 运行 `scripts/render_article.py` 生成固定样式的 `index.html`，再运行 `scripts/audit_package.py` 做交付检查。
 
 执行命令、目录规则、字幕判断和失败分支见 [运行流程](references/workflow.md)。遇到依赖、模型或转写问题时再读 [故障处理](references/troubleshooting.md)。
 
@@ -48,7 +48,7 @@ metadata:
 
 文章顺序固定为：标题与节目资料、导读、3–7 条互不重复的 Key Takeaways、按时间推进的正文、简短来源说明。阅读时间是信息完整后的结果，不是压缩目标；高密度或 PPT 驱动节目应自然增加篇幅或分篇。忠实、信息完整和原有推理链优先于固定字数。
 
-生成后告诉用户成品路径、实际转写来源、采用的 Whisper 模型、是否存在待核对项，以及临时音频是否已删除。
+生成后告诉用户成品路径、实际转写来源、采用的转录模型、云端转录耗时，以及是否存在待核对项。
 
 内容整理由当前运行本 Skill 的 Agent 完成，不绑定特定厂商或固定模型。标点、分段和明显转录错误也在逐段核对时处理，不另起一个会脱离音频的自由改写阶段。
 

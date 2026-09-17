@@ -7,3 +7,5 @@ models/
 *.part
 audio.*
 audio-16k.wav
+.env
+.env.*

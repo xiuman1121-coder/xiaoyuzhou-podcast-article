@@ -2,7 +2,7 @@
 
 一个 Codex Skill：把公开的小宇宙单集整理成忠实、可追溯、适合中文阅读的 HTML 文章，并允许用户继续基于完整逐字稿提问。
 
-当前版本：`v1.0.0`。
+当前版本：`v2.0.0`。
 
 它会保存带时间戳的逐字稿和来源表，先逐段整理，再用固定模板生成 `index.html`。阅读时间由最终信息量决定，不作为删减目标。Show Notes 图片会全部盘点；PPT 驱动节目默认保留所有承载独立信息的页面，并检查核心观点的推理链与证据链。遇到音频或逐字稿缺失时会停止并写失败报告，不会自行补齐内容。
 
@@ -11,26 +11,17 @@
 - 输入：公开的 `xiaoyuzhoufm.com/episode/...` 单集链接
 - 语言：中文及中英混合音频，中文文章
 - 系统：目前主要在 macOS 上验证；脚本按 Python 跨平台方式编写，但 Windows 和 Linux 尚未完成实机验证
-- 语音识别：本地 `faster-whisper-small`，低资源设备可用 `faster-whisper-base`
+- 语音识别：阿里云百炼华北 2（北京）`paraformer-v2`，使用用户自己的 API Key
 - 输出：静态 HTML、逐字稿、来源表、图片取舍记录
 
-暂不支持其他播客平台、手机端本地运行、云端转写 API 或 MLX Whisper。
+暂不支持其他播客平台、OSS、本地语音模型或其他云端转写服务。
 
 ## 安装
 
-1. 安装 Python 3.9+。建议同时安装 FFmpeg 和 ffprobe，用于异常音频排查与转码。
-2. 创建虚拟环境并安装依赖：
+1. 安装 Python 3.9+。
+2. 将仓库中的 `xiaoyuzhou-podcast-article/` 子文件夹安装到 Codex 的 Skills 目录。不要把仓库根目录整体当作 Skill 安装；根目录的 README 和 LICENSE 面向 GitHub 访问者。脚本只使用 Python 标准库，不需要安装语音模型或额外 Python 包。
 
-   ```bash
-   python -m venv .venv
-   .venv/bin/pip install -r xiaoyuzhou-podcast-article/requirements.txt
-   ```
-
-   Windows PowerShell 使用 `.venv\Scripts\pip.exe install -r xiaoyuzhou-podcast-article\requirements.txt`。
-
-3. 将仓库中的 `xiaoyuzhou-podcast-article/` 子文件夹安装到 Codex 的 Skills 目录。不要把仓库根目录整体当作 Skill 安装；根目录的 README 和 LICENSE 面向 GitHub 访问者。
-
-模型不随仓库发布。首次转写时，`faster-whisper` 会下载选择的 `small` 或 `base` 模型。
+3. 在阿里云百炼华北 2（北京）创建自己的 API Key，并为 `paraformer-v2` 开启“免费额度用完即停”。先运行 `python scripts/configure_api_key.py`，看到“API Key（隐藏输入）”后再粘贴 Key。不要把 Key 直接粘贴到普通 `%`/`$` 命令提示符，也不要写入仓库或聊天。
 
 ## 使用
 
@@ -54,9 +45,11 @@
 
 只有逐字稿检查和内容审计通过后才交付正式 HTML。无法确认关键内容时，流程会停止并生成失败报告，不会用推测补齐。
 
-## 隐私与网络
+## 云端转写、费用与隐私
 
-语音识别在本机完成，不需要 API Key。网络只用于读取公开的小宇宙页面、下载节目音频与 Show Notes 图片，以及首次下载 Whisper 模型。临时音频在成功完成或最终停止后删除。
+无可用字幕时，Skill 将小宇宙公开音频 CDN URL 直接提交给阿里云百炼，不在本地保存原始音频。当前 `paraformer-v2` 北京地域公开价格为每秒 ¥0.00008，并标示每月 10 小时免费额度；政策和价格以阿里云控制台为准。
+
+默认只允许免费额度调用。用户必须开启“免费额度用完即停”；额度耗尽后任务立即停止。只有用户自行充值、关闭该开关并明确同意本期预计费用后，才允许按量调用。每位用户使用自己的 API Key、免费额度和账单。
 
 ## 许可
 

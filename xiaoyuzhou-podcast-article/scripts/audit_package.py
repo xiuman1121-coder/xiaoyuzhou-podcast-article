@@ -34,6 +34,10 @@ def main():
     normalized = [re.sub(r"\s+", "", (x.get("title", "") + x.get("detail", ""))) for x in article.get("takeaways", [])]
     if len(normalized) != len(set(normalized)):
         errors.append("存在完全重复的 Key Takeaway")
+    time_pattern = re.compile(r"^\d{2}:\d{2}:\d{2}[–-]\d{2}:\d{2}:\d{2}$")
+    for index, section in enumerate(article.get("sections", []), 1):
+        if not time_pattern.fullmatch(section.get("time", "")):
+            errors.append(f"第 {index} 章时间范围必须使用 HH:MM:SS–HH:MM:SS")
 
     source_map = load(root / "source-map.json")
     if not source_map.get("items"):

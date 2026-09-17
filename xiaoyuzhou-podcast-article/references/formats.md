@@ -10,11 +10,11 @@
   "episode_url": "https://www.xiaoyuzhoufm.com/episode/...",
   "duration_seconds": 3600,
   "reading_minutes": 15,
-  "transcription_source": "local_whisper_small",
+  "transcription_source": "aliyun_paraformer_v2",
   "guide": ["导读第一段", "导读第二段"],
   "takeaways": [{"title": "核心判断", "detail": "关键数据、案例或推理", "insight": "这项判断意味着什么或适用边界"}],
   "sections": [{
-    "number": "01", "time": "00:00–08:20", "title": "章节标题",
+    "number": "01", "time": "00:00:00–00:08:20", "title": "章节标题",
     "blocks": [
       {"type": "paragraph", "text": "正文"},
       {"type": "quote", "text": "已核对原话", "speaker": "嘉宾"},
@@ -26,6 +26,8 @@
   }]
 }
 ```
+
+章节时间统一使用 `HH:MM:SS–HH:MM:SS`。即使节目不足一小时，也保留小时位；不得使用容易与“分钟:秒”混淆的 `02:18–02:34`。
 
 渲染器只接受 `paragraph`、`quote`、`list`、`table`、`figure` 和 `gallery`。文字会被 HTML 转义，不在 JSON 中写 HTML。
 

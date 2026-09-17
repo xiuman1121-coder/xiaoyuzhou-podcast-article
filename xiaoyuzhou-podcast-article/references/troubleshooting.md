@@ -1,25 +1,33 @@
 # 故障处理
 
-## 找不到 FFmpeg 或 ffprobe
+## 没有 API Key
 
-先运行 `ffmpeg -version` 与 `ffprobe -version`。macOS 可用 Homebrew，Windows 可用 winget，Linux 使用发行版包管理器安装。两者负责媒体检查和必要时转码，不负责语音识别。
+解释 `paraformer-v2` 是无字幕节目生成逐字稿所必需的云服务。引导用户在阿里云百炼华北 2（北京）创建自己的 Key，再设置 `DASHSCOPE_API_KEY`。不得索取、记录或提交用户的 Key。
 
-## 模型下载失败
+## 尚未确认“免费额度用完即停”
 
-`faster-whisper` 首次使用 `small` 或 `base` 时需要联网下载模型。保留错误信息，不要转用云端 API。网络恢复后重试同一模型；模型已手动下载时可把目录传给 `--model-path`。
+引导用户在百炼模型用量页面为 `paraformer-v2` 开启该开关。完成后设置 `DASHSCOPE_FREE_TIER_STOP_CONFIRMED=1`。该本地标记不替代服务端设置。
 
-## small 无法运行
+## 免费额度耗尽
 
-确认磁盘空间和内存。若属于资源不足，改用 `base`，并在结果中记录实际模型。不要静默更换。
+收到 `AllocationQuota.FreeTierOnly` 时立即停止，不自动重试或付费。告诉用户可以等待下月 1 日刷新，或自行充值、关闭“用完即停”并明确授权本期付费。展示节目时长和按当前公开单价计算的预计费用。
 
-## 音频无法解码
+## 欠费或服务暂停
 
-先用 ffprobe 检查，再让 faster-whisper 直接读取。直接读取失败时，用 ffmpeg 生成 `.work/audio-16k.wav` 后重试一次。仍失败就输出失败报告并停止。
+`Arrearage`、`isv.OUT_OF_SERVICE` 或余额不足表示账户状态问题。引导用户到阿里云“费用与成本”充值并结清欠费，余额更新后再重试。未经明确许可不使用 `--allow-paid`。
+
+## API Key 或权限错误
+
+401/403 可能表示 Key 无效、Key 不属于北京地域或没有模型权限。检查地域、模型名和环境变量；不要在日志中打印完整 Key。
+
+## CDN 下载失败
+
+收到 `InvalidFile.DownloadFailed` 时重新解析一次小宇宙页面以取得新的 CDN URL，再重试一次。仍失败则写失败报告并停止。不下载本地音频，不接入 OSS。
 
 ## 转写不完整
 
-查看 `.work/transcript-validation.json` 中的尾部覆盖、长缺口和时间倒序。重新下载音频并比较 ffprobe 时长；必要时重新转写一次。缺失仍存在时不生成正式文章。
+查看 `.work/transcript-validation.json` 的尾部覆盖、长缺口和时间倒序。重新提交一次仍缺失时不生成正式文章。
 
 ## 说话人或专名不确定
 
-回到相邻时间段、节目自我介绍和 Show Notes 核对。官方图文版只能校正这些具体项目。无法唯一确认时使用保守描述；关键归属不确定时省略或标记待核对。
+说话人分离只提供编号，不能自动把编号绑定为真实姓名。回到相邻时间段、节目自我介绍和 Show Notes 核对；无法唯一确认时使用保守描述。
